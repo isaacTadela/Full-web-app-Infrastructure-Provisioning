@@ -62,4 +62,4 @@ Plus all instances run a script you can find in 'modules\ec2\templates\project-a
 Seeing is believing or understanding so for the finally you can see here a 3D diagram of all the environment
 (generated with Cloudcraft)
 
-![cloudcraft diagram](cloudcraft diagram(3D).png)
+![cloudcraft diagram](cloudcraft diagram(3D).PNG)
