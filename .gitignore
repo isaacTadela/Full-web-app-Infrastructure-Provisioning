@@ -8,7 +8,3 @@ crash.log
 *.key
 *.pem
 *.hcl
-
-# Secrets are encrypted using git-crypt
-!secrets/*
-!production
