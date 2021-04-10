@@ -54,9 +54,14 @@ for example setup the prod environment in "us-east-1" region in the US for our c
 (the difference can be instances types or scale)
 
 ### EC2 Adjustments
+#### Keys
 Every instance needs a key and the public key here is the file 'modules\ec2\keysadmin.pub' and you can change it according to your generated key so you can ssh to the instances using you private key
-Plus all instances run a script you can find in 'modules\ec2\templates\project-app.cloudinit' and customize to your needs, the script here installs nginx after an update and upgrade
+#### Script
+All instances runs a script you can find in 'modules\ec2\templates\project-app.cloudinit' and customize to your needs, the script here installs nginx after an update and upgrade and you can customize it too to your needs
 
+## Done
+Do not forget to terminate the instances, time is money
+```terraform destroy```
 
 ## Diagram
 Seeing is believing or understanding so for the finally you can see here a 3D diagram of all the environment
