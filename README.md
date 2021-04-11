@@ -58,7 +58,7 @@ for example setup the prod environment in "us-east-1" region in the US for our c
 Every instance needs a key and the public key here is the file 'modules\ec2\keysadmin.pub' and you can change it according to your generated key so you can ssh to the instances using you private key
 #### Script
 All instances runs a script you can find in 'modules\ec2\templates\project-app.cloudinit', 
-the script installs git, chef-solo and run my cookbook with an apache server
+the script installs git, chef-solo and run my cookbook with an apache server from my repo 'https://github.com/isaacTadela/chef_cookbook'
 and you can customize it too to your needs
 
 ## Done
