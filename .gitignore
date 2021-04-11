@@ -2,7 +2,7 @@
 .terraform
 .terragrunt-cache
 *.tfstate*
-crash.log
+*.log
 
 # Secrets are not allowed in general
 *.key

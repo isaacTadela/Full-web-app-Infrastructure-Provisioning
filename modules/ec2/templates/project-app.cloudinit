@@ -1,4 +1,9 @@
 #!/bin/bash
 sudo apt update
 sudo apt -y upgrade
-sudo apt install -y nginx
+sudo apt install git
+wget https://packages.chef.io/files/stable/chefdk/4.13.3/ubuntu/20.04/chefdk_4.13.3-1_amd64.deb
+sudo dpkg -i chefdk_4.13.3-1_amd64.deb
+git clone https://github.com/isaacTadela/chef_cookbook.git
+cd chef_cookbook
+sudo chef-solo -c ~/chef/solo.rb -j ~/chef/runlist.json
