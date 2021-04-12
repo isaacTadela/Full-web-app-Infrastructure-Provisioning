@@ -10,6 +10,7 @@ This repo creates "environment" modules with all the necessary resources to enab
 - Load-Balancer
 - Autoscaling Group
 - LaunchConfiguration including a user-data script
+- IAM Role
 
 
 ## Prerequisite resources
@@ -17,6 +18,8 @@ This repo creates "environment" modules with all the necessary resources to enab
 - AWS bucket with a folder holding the terraform statefile
 - Dynamodb table use for lock file
 - An admin RSA public key (for SSH connection to the instances)
+- Create IAM role with S3 Access
+- S3 Bucket with a tar file of your application
 
 
 ## Persistence
@@ -45,21 +48,32 @@ This repo creates "environment" modules with all the necessary resources to enab
 
 
 ## Setup and Adjustments
-You can basically run ```terraform init``` and ```terraform apply``` and this will setup the environment in the "eu-west-3" region
 
-### A little more advanced
+### Setup
+You can basically run  ```terraform init```  to initialize the modules
+run  ```terraform plan```  for a dry-run 
+and  ```terraform apply```  this will execute the code and setup the environment in the AWS region "eu-west-3"
+
+### A little more advanced setup
 Now suppose we want to provision the same environment for our development, testing and production but our customers are in the US and the development and testing teams are in Europe
-So we can simply run the command ```terraform apply -var-file=./prod/prod.tfvars``` and this will setup the exact same environment according to the variables in that file,
+So we can simply run the command  ```terraform apply -var-file=./prod/prod.tfvars```  and this will setup the exact same environment according to the variables in that file,
 for example setup the prod environment in "us-east-1" region in the US for our customers
 (the difference can be instances types or scale)
 
 ### EC2 Adjustments
+
 #### Keys
 Every instance needs a key and the public key here is the file 'modules\ec2\keysadmin.pub' and you can change it according to your generated key so you can ssh to the instances using you private key
+
 #### Script
-All instances runs a script you can find in 'modules\ec2\templates\project-app.cloudinit', 
-the script installs git, chef-solo and run my cookbook with an apache server
+All instances runs the script at startup, you can find it in 'modules\ec2\templates\project-app.cloudinit', 
+the script installs git and chef-solo and then run my cookbook
 and you can customize it too to your needs
+
+#### EC2 Role - S3 Access
+I assume that your application residing in an s3 bucket as a tar file 
+So every ec2 instance have a role attached to it with access of AmazonS3ReadOnlyAccess policy that you can also customize to your needs
+
 
 ## Done
 Do not forget to terminate the instances, time is money

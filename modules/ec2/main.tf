@@ -5,11 +5,58 @@ resource "aws_key_pair" "admin_key" {
   tags 					  = { Name = "${var.environment}-key_pair" }
 }
 
+resource "aws_iam_role" "s3_access_role" {
+  name = "s3_access_role"
+
+ assume_role_policy = jsonencode({
+  Version: "2012-10-17",
+  Statement: [
+    {
+      Action: "sts:AssumeRole",
+      Principal: {
+        Service: "ec2.amazonaws.com"
+       },
+        Effect: "Allow",
+        Sid: ""
+      }
+    ]
+  })
+
+  tags = {
+      Name = "${var.environment}-role"
+  }
+}
+
+resource "aws_iam_instance_profile" "s3_access_role_profile" {
+  name = "s3_access_role_profile"
+  role = aws_iam_role.s3_access_role.name
+}
+
+resource "aws_iam_role_policy" "role_policy" {
+  name = "role_policy"
+  role = aws_iam_role.s3_access_role.id
+  # AmazonS3ReadOnlyAccess
+  policy = jsonencode({
+    Version: "2012-10-17",
+    Statement: [
+		  {
+            Effect: "Allow",
+            Action: [
+                "s3:Get*",
+                "s3:List*"
+            ],
+            Resource: "*"
+		  }
+		]
+	})
+}
+
 resource "aws_launch_configuration" "launch_config" {
   name_prefix             = "${var.environment}_launch_config"
   key_name                = aws_key_pair.admin_key.id
   image_id                = var.ami
   instance_type           = var.instance_type
+  iam_instance_profile	  = aws_iam_instance_profile.s3_access_role_profile.name
   security_groups      	  = [aws_security_group.ec2_sg.id]
   enable_monitoring       = false
   user_data 			  = file("${path.module}/templates/project-app.cloudinit")
