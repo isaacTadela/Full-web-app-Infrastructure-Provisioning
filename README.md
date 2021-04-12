@@ -79,6 +79,7 @@ So every ec2 instance have a role attached to it with access of AmazonS3ReadOnly
 Do not forget to terminate the instances, time is money
 ```terraform destroy```
 
+
 ## Diagram
 Seeing is believing or understanding so for the finally you can see here a 3D diagram of all the environment
 (generated with Cloudcraft)
