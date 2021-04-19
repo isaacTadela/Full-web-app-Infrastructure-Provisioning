@@ -19,12 +19,12 @@ This repo creates "environment" modules with all the necessary resources to enab
 - Dynamodb table use for lock file
 - An admin RSA public key (for SSH connection to the instances)
 - Create IAM role with S3 Access
-- S3 Bucket with a tar file of your application
+- S3 Bucket with a tar file of your application/chef cookbook (i used my cookbok you can find in [this repo](https://github.com/isaacTadela/Chef_ec2) )
 
 
 ## Persistence
 - The terraform statefile is stored in an AWS S3 bucket
-- The terraform lock file is stored in AWS Dynamodb
+- The terraform use AWS dynamoDB to lock the statefile
 
 
 ## Requirements
