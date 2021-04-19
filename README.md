@@ -82,6 +82,6 @@ Do not forget to terminate the instances, time is money
 
 ## Diagram
 Seeing is believing or understanding so for the finally you can see here a 3D diagram of all the environment
-(generated with Cloudcraft)
+(generated with [Cloudcraft](https://www.cloudcraft.co))
 
 ![cloudcraft diagram]( /cloudcraft%20diagram(3D).png )
