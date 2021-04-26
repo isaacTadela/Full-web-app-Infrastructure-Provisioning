@@ -48,6 +48,7 @@ module "ec2" {
   public_subnets 						= module.vpc.public_subnets
   vpc_id 								= module.vpc.vpc_id
   target_group_arn 						= module.alb.target_group_arn
+  alb_arn_suffix                        = module.alb.alb_arn_suffix
   autoscaling_group_min_size 			= var.autoscaling_group_min_size
   autoscaling_group_max_size 			= var.autoscaling_group_max_size
   autoscaling_group_desired_capacity 	= var.autoscaling_group_desired_capacity

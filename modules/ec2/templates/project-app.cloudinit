@@ -16,4 +16,3 @@ aws s3api get-object --bucket unofficial-chevrolet-auto-shop-bucket --key Chef_e
 tar -xvzf Chef_ec2.tar.gz -C ~/
 rm Chef_ec2.tar.gz
 sudo chef-solo -c ~/Chef_ec2/solo.rb -j ~/Chef_ec2/runlist.json --chef-license accept
-
