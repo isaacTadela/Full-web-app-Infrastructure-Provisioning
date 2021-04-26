@@ -1,5 +1,5 @@
 # Terraform Infrastructure Provisioning
-This repo creates "environment" modules with all the necessary resources to enable end-to-end interaction with a Web-app and RDS on AWS
+This repo creates "environment" modules with all the necessary resources to enable end-to-end interaction with a Web-app include RDS on AWS
 
 
 ## What are we provisioning here?
