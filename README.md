@@ -10,21 +10,21 @@ This repo creates "environment" modules with all the necessary resources to enab
 - Load-Balancer
 - Autoscaling Group
 - LaunchConfiguration including a user-data script
-- IAM Role
+- IAM Roles
+- CloudWatch
 
 
 ## Prerequisite resources
 - AWS cli configure
-- AWS bucket with a folder holding the terraform statefile
-- Dynamodb table use for lock file
-- An admin RSA public key (In case you want to connect to the instances with SSH) 
-- Create IAM role with S3 Access
+- AWS S3 bucket holding the terraform statefile
+- Dynamodb use for lock the statefile
+- An admin RSA public key (so you could connect to the instances with SSH) 
 - S3 Bucket with a tar file of your application/chef cookbook (I used my cookbok you can find in [this repo](https://github.com/isaacTadela/Chef_ec2) )
 
 
 ## Persistence
 - The terraform statefile is stored in an AWS S3 bucket
-- The terraform use AWS dynamoDB to lock the statefile
+- Use AWS dynamoDB to lock the statefile
 
 
 ## Requirements
