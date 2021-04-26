@@ -17,14 +17,14 @@ This repo creates "environment" modules with all the necessary resources to enab
 - AWS cli configure
 - AWS bucket with a folder holding the terraform statefile
 - Dynamodb table use for lock file
-- An admin RSA public key (for SSH connection to the instances)
+- An admin RSA public key (In case you want to connect to the instances with SSH) 
 - Create IAM role with S3 Access
-- S3 Bucket with a tar file of your application
+- S3 Bucket with a tar file of your application/chef cookbook (I used my cookbok you can find in [this repo](https://github.com/isaacTadela/Chef_ec2) )
 
 
 ## Persistence
 - The terraform statefile is stored in an AWS S3 bucket
-- The terraform lock file is stored in AWS Dynamodb
+- The terraform use AWS dynamoDB to lock the statefile
 
 
 ## Requirements
@@ -67,8 +67,8 @@ Every instance needs a key and the public key here is the file 'modules\ec2\keys
 
 #### Script
 All instances runs the script at startup, you can find it in 'modules\ec2\templates\project-app.cloudinit', 
-the script installs git and chef-solo and then run my cookbook from my repo https://github.com/isaacTadela/chef_cookbook
-and you can customize it too to your needs
+the script installs chef-solo and awscli, afterwards download my cookbook from my private S3 bucket,
+and finally run my [cookbook](https://github.com/isaacTadela/Chef_ec2) 
 
 #### EC2 Role - S3 Access
 I assume that your application residing in an s3 bucket as a tar file 
@@ -82,6 +82,6 @@ Do not forget to terminate the instances, time is money
 
 ## Diagram
 Seeing is believing or understanding so for the finally you can see here a 3D diagram of all the environment
-(generated with Cloudcraft)
+(generated with [Cloudcraft](https://www.cloudcraft.co))
 
 ![cloudcraft diagram]( /cloudcraft%20diagram(3D).png )
