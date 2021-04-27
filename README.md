@@ -44,7 +44,7 @@ This repo creates "environment" modules with all the necessary resources to enab
 ### RDS Requirements:
 - Use free-tier instances only (t2.micro)
 - All resources will use private subnets, to allow traffic only from the instances in the VPC
-- Each DB subnet-group must have at least two Availability Zones in the Region so we have 2 private subnets for RDS
+- Each DB subnet group must have subnets in at least two Availability Zones in an AWS Region (required by AWS)
 
 
 ## Setup and Adjustments
