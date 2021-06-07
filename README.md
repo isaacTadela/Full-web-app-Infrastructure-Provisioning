@@ -38,7 +38,6 @@ This repo creates environment modules with all the necessary resources to enable
 - All resources will use public subnets to allow traffic from outside
 - The instances should allow incoming traffic on port 80 from the LB only
 - The instances should allow SSH access to the admin user
-- You can specify only one subnet per Availability Zone. You must specify subnets from at least two Availability Zones so we have 2 public subnets for RDS
 
 ### RDS Requirements:
 - Use free-tier instances only (t2.micro)
