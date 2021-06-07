@@ -1,5 +1,5 @@
 # Terraform Infrastructure Provisioning
-This repo creates "environment" modules with all the necessary resources to enable end-to-end interaction with a Web-app include RDS on AWS
+This repo creates environment modules with all the necessary resources to enable end-to-end interaction with a Web-app include VPC, RDS, Load-Balancer and EC2 on AWS
 
 
 ## What are we provisioning here?
@@ -9,22 +9,22 @@ This repo creates "environment" modules with all the necessary resources to enab
 - RDS
 - Load-Balancer
 - Autoscaling Group
-- LaunchConfiguration including a user-data script
+- LaunchConfiguration (and a user-data script included)
 - IAM Roles
 - CloudWatch
 
 
 ## Prerequisite resources
-- AWS cli configure
+- AWS cli configure with suitable privileges
 - AWS S3 bucket holding the terraform statefile
 - Dynamodb use for lock the statefile
 - An admin RSA public key (so you could connect to the instances with SSH) 
-- S3 Bucket with a tar file of your application/chef cookbook (I used my cookbok you can find in [this repo](https://github.com/isaacTadela/Chef_ec2) )
+- S3 Bucket with your artifacts, tar files of your web-application and a chef cookbooks (I used my cookboks you can find in [this repo](https://github.com/isaacTadela/Chef_ec2) )
 
 
 ## Persistence
-- The terraform statefile is stored in an AWS S3 bucket
-- Use AWS dynamoDB to lock the statefile
+- The terraform statefile is stored in an AWS S3 bucke
+- The terraform lock file is stored in AWS Dynamodb
 
 
 ## Requirements
@@ -35,7 +35,7 @@ This repo creates "environment" modules with all the necessary resources to enab
 
 ### Instances Requirements:
 - Use free-tier instances only (t2.micro)
-- All resources will use public subnets, to allow traffic from outside
+- All resources will use public subnets to allow traffic from outside
 - The instances should allow incoming traffic on port 80 from the LB only
 - The instances should allow SSH access to the admin user
 - Each DB subnet group must have at least two Availability Zones in the Region so we have 2 private subnets for RDS
@@ -50,20 +50,21 @@ This repo creates "environment" modules with all the necessary resources to enab
 ## Setup and Adjustments
 
 ### Setup
-You can basically run  ```terraform init```  to initialize the modules
-run  ```terraform plan```  for a dry-run 
-and  ```terraform apply```  this will execute the code and setup the environment in the AWS region "eu-west-3"
+You can basically run  ```terraform init```  to initialize the modules  
+run  ```terraform plan```  for a dry-run  
+and  ```terraform apply```  this will execute the code and setup the environment in the AWS region "eu-west-3" in about 10 minutes
 
 ### A little more advanced setup
-Now suppose we want to provision the same environment for our development, testing and production but our customers are in the US and the development and testing teams are in Europe
-So we can simply run the command  ```terraform apply -var-file=./prod/prod.tfvars```  and this will setup the exact same environment according to the variables in that file,
-for example setup the prod environment in "us-east-1" region in the US for our customers
-(the difference can be instances types or scale)
+Now suppose we want to provision the same environment for our development and testing teams in Europe but our customers are in the US  
+So we can simply run the command  ```terraform apply -var-file=./prod/prod.tfvars```  and this will setup the exact same environment according to the variables in that file,  
+for example setup the production environment in "us-east-1" region in the US for our customers
+(another difference can be instances types or scale policy)
 
 ### EC2 Adjustments
 
 #### Keys
-Every instance needs a key and the public key here is the file 'modules\ec2\keysadmin.pub' and you can change it according to your generated key so you can ssh to the instances using you private key
+Every instance needs a key and the public key here is the file '\modules\ec2\keysadmin.pub'  
+and you can change it according to your generated key so you can ssh to the instances using you private key
 
 #### Script
 All instances runs the script at startup, you can find it in 'modules\ec2\templates\project-app.cloudinit', 
