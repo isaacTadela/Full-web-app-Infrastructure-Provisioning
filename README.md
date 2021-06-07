@@ -76,8 +76,8 @@ you can also customize to your needs
 
 
 ## Done
-Do not forget to terminate the environment, time is money
-Simply run ```terraform destroy```
+- Do not forget to initialize your database
+- Do not forget to terminate the environment, 'time is money' so simply run ```terraform destroy```
 
 
 ## Diagram
