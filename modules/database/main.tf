@@ -5,7 +5,7 @@ resource "aws_db_subnet_group" "rds-db-default-group" {
 }
 
 resource "aws_security_group" "rds-mysql-db" {
-  name = "workshop_rds"
+  name                  = "db_security_group"
   description 			= "sg for workshop rds"
   vpc_id 				= var.vpc_id
 
@@ -32,9 +32,9 @@ resource "aws_db_instance" "rds-db" {
   engine_version        = var.engine_version
   instance_class        = var.instance_class
   name                  = var.name
+  port                  = var.port
   username              = var.username
   password              = var.password
-  parameter_group_name  = "default.mysql5.7"
   skip_final_snapshot   = var.skip_final_snapshot
   multi_az			    = var.multi_az
   apply_immediately	    = var.apply_immediately
@@ -42,5 +42,8 @@ resource "aws_db_instance" "rds-db" {
   storage_type		    = var.storage_type
   db_subnet_group_name  = aws_db_subnet_group.rds-db-default-group.name
   availability_zone     = var.azs[0]
+  vpc_security_group_ids = [ aws_security_group.rds-mysql-db.id ]
+  
+  
   tags 					= { Name = "${var.environment}-db_instance" }
 }

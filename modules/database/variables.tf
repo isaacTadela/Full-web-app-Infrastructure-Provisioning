@@ -6,20 +6,16 @@ variable "private_subnet" {}
 
 variable "environment" {}
 
+variable "port" {}
+
+variable "username" {}
+
+variable "password" {}
+
+variable "name" {}
+
 variable "multi_az" {
   default = false
-}
-
-variable "username" {
-  default = "username"
-}
-
-variable "password" {
-  default = "password"
-}
-
-variable "port" {
-  default = "3306"
 }
 
 variable "protocol" {
@@ -46,19 +42,12 @@ variable "instance_class" {
   default = "db.t2.micro"
 }
 
-variable "name" {
-  default = "rds_db"
-}
-
 variable "storage_type" {
   default = "standard"
 }
 
 variable "allocated_storage" {
   default = "20"
-}
-variable "availability_zone" {
-  default = "eu-west-3a"
 }
 
 variable "skip_final_snapshot" {

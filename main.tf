@@ -28,6 +28,10 @@ module "database" {
   private_subnet 						= module.vpc.private_subnets[0]
   vpc_id 								= module.vpc.vpc_id
   environment 							= var.environment
+  username 								= var.db_username
+  password 								= var.db_password
+  name 								    = var.db_name
+  port 								    = var.db_port
   
   depends_on = [module.vpc]
 }
@@ -47,6 +51,10 @@ module "ec2" {
   
   public_subnets 						= module.vpc.public_subnets
   vpc_id 								= module.vpc.vpc_id
+  db_hostname							= module.database.rds_hostname
+  db_port 								= module.database.rds_port
+  db_username 							= module.database.rds_username
+  db_password 							= module.database.rds_password
   target_group_arn 						= module.alb.target_group_arn
   alb_arn_suffix                        = module.alb.alb_arn_suffix
   autoscaling_group_min_size 			= var.autoscaling_group_min_size
@@ -55,6 +63,7 @@ module "ec2" {
   instance_type 						= var.instance_type
   ami 									= var.ami
   environment 							= var.environment
+  
   
   depends_on = [module.alb]
 }

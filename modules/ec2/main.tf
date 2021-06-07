@@ -1,7 +1,8 @@
 resource "aws_security_group" "ec2_sg" {
-  name        			  = "${var.environment}-ec2_security_group"
+  name        			  = "ec2_security_group"
   vpc_id      			  = var.vpc_id
 
+  # SSH port
   ingress {
     from_port   		  = 22
     to_port     		  = 22
@@ -9,6 +10,7 @@ resource "aws_security_group" "ec2_sg" {
     cidr_blocks 	 	  = ["0.0.0.0/0"]
   }
 
+  # HTTP port
   ingress {
     from_port       	  = 80
     to_port         	  = 80
@@ -16,7 +18,15 @@ resource "aws_security_group" "ec2_sg" {
     cidr_blocks 	 	  = ["0.0.0.0/0"]
   }
   
-  # Allow outbound internet access.
+  # grafana port
+  ingress {
+    from_port       	  = 3000
+    to_port         	  = 3000
+    protocol        	  = "tcp"
+    cidr_blocks 	 	  = ["0.0.0.0/0"]
+  }
+  
+  # Allow outbound internet access
   egress {
     from_port   		  = 0
     to_port     		  = 0
@@ -32,6 +42,57 @@ resource "aws_key_pair" "admin_key" {
   public_key 			  = file("${path.module}/keys/admin.pub")
   
   tags 					  = { Name = "${var.environment}-key_pair" }
+}
+
+# AmazonS3ReadOnlyAccess
+resource "aws_iam_role_policy" "role_policy_s3" {
+  name = "role_policy_s3"
+  role = aws_iam_role.s3_access_role.id
+  
+  policy = jsonencode({
+    Version: "2012-10-17",
+    Statement: [
+		  {
+            Effect: "Allow",
+            Action: [
+                "s3:Get*",
+                "s3:List*"
+            ],
+            Resource: "*"
+		  }
+		]
+	})
+}
+
+# CloudWatchReadOnlyAccess
+resource "aws_iam_role_policy" "role_policy_cloudwatch" {
+  name = "role_policy_cloudwatch"
+  role = aws_iam_role.s3_access_role.id
+  
+  policy = jsonencode({
+    Version: "2012-10-17",
+    Statement: [
+		  {
+            Effect: "Allow",
+            Action: [
+                "autoscaling:Describe*",
+                "cloudwatch:Describe*",
+                "cloudwatch:Get*",
+                "cloudwatch:List*",
+                "logs:Get*",
+                "logs:List*",
+                "logs:StartQuery",
+                "logs:StopQuery",
+                "logs:Describe*",
+                "logs:TestMetricFilter",
+                "logs:FilterLogEvents",
+                "sns:Get*",
+                "sns:List*"
+            ],
+            Resource: "*"
+		  }
+		]
+	})
 }
 
 resource "aws_iam_role" "s3_access_role" {
@@ -54,28 +115,22 @@ resource "aws_iam_role" "s3_access_role" {
   tags = { Name = "${var.environment}-role" }
 }
 
-resource "aws_iam_role_policy" "role_policy" {
-  name = "role_policy"
-  role = aws_iam_role.s3_access_role.id
-  # AmazonS3ReadOnlyAccess
-  policy = jsonencode({
-    Version: "2012-10-17",
-    Statement: [
-		  {
-            Effect: "Allow",
-            Action: [
-                "s3:Get*",
-                "s3:List*"
-            ],
-            Resource: "*"
-		  }
-		]
-	})
-}
-
 resource "aws_iam_instance_profile" "s3_access_role_profile" {
   name = "s3_access_role_profile"
   role = aws_iam_role.s3_access_role.name
+}
+
+# Render a part using a `template_file`
+data "template_file" "script" {
+  template = file("${path.module}/templates/project-app.cloudinit")
+
+  vars = {
+	DB_DNS=var.db_hostname
+	DB_PORT=var.db_port
+	DB_USER=var.db_username
+	DB_PASS=var.db_password
+  }
+
 }
 
 resource "aws_launch_configuration" "launch_config" {
@@ -86,8 +141,8 @@ resource "aws_launch_configuration" "launch_config" {
   iam_instance_profile	  = aws_iam_instance_profile.s3_access_role_profile.name
   security_groups      	  = [aws_security_group.ec2_sg.id]
   enable_monitoring       = true
-  user_data 			  = file("${path.module}/templates/project-app.cloudinit")
-
+  user_data 			  = data.template_file.script.rendered
+  
   lifecycle {
     create_before_destroy = true
   }
@@ -109,6 +164,7 @@ resource "aws_autoscaling_group" "autoscaling_group" {
   lifecycle {
     create_before_destroy = true
   }
+  
   
   tag {
     key                   = "Name"
@@ -155,6 +211,22 @@ resource "aws_autoscaling_policy" "scale_down_policy" {
   autoscaling_group_name = aws_autoscaling_group.autoscaling_group.name
 }
 
+resource "aws_autoscaling_policy" "scale_dynamic_CPU_policy" {
+  name                   = "${var.environment}-autoscaling-dynamic-CPU-policy"
+  policy_type = "TargetTrackingScaling"
+  autoscaling_group_name = aws_autoscaling_group.autoscaling_group.name 
+  estimated_instance_warmup = 200
+  
+  # ... other configuration ...
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+
+    target_value = 40.0
+  }
+}
+
 resource "aws_cloudwatch_metric_alarm" "scale_down_alarm" {
   alarm_name          = "${var.environment}-cloudwatch-scale-down-alarm"
   comparison_operator = "LessThanOrEqualToThreshold"
@@ -175,18 +247,3 @@ resource "aws_cloudwatch_metric_alarm" "scale_down_alarm" {
   tags = { Name = "${var.environment}-cloudwatch-scale-down-alarm" }
 }
 
-resource "aws_autoscaling_policy" "scale_dynamic_CPU_policy" {
-  name                   = "${var.environment}-autoscaling-dynamic-CPU-policy"
-  policy_type = "TargetTrackingScaling"
-  autoscaling_group_name = aws_autoscaling_group.autoscaling_group.name 
-  estimated_instance_warmup = 200
-  
-  # ... other configuration ...
-  target_tracking_configuration {
-    predefined_metric_specification {
-      predefined_metric_type = "ASGAverageCPUUtilization"
-    }
-
-    target_value = 40.0
-  }
-}

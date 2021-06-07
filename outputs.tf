@@ -21,3 +21,9 @@ output "alb_dns_name" {
 output "admin_key_name" {
   value = module.ec2.admin_key_name
 }
+
+## Everything is ready Message
+output "Message" {
+  value = "Everything is ready but Please wait another 4 minutes for final adjustments and then go to the URL specified in the alb_dns_name"
+  
+}

@@ -29,6 +29,22 @@ variable "public_subnets" {
   default     	= ["172.0.32.0/20", "172.0.48.0/20"]
 }
 
+variable "db_name" {
+  default		= "rds_db"
+}
+
+variable "db_port" {
+  default		= 3306
+}
+
+variable "db_username" {
+  default		= "username"
+}
+
+variable "db_password" {
+  default		= "password"
+}
+
 variable "autoscaling_group_min_size" {
   default		= 1
 }

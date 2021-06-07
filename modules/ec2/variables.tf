@@ -17,3 +17,11 @@ variable "public_subnets" {}
 variable "target_group_arn" {}
 
 variable "alb_arn_suffix" {}
+
+variable "db_hostname" {}
+
+variable "db_port" {}
+
+variable "db_username" {}
+
+variable "db_password" {}
