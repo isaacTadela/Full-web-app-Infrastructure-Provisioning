@@ -14,6 +14,7 @@ output "vpc_cidr" {
 
 ## LoadBalancer DNS address
 output "alb_dns_name" {
+  description = "Everything is ready but Please wait another 4 minutes for final adjustments and then go to the URL specified in the alb_dns_name."
   value = module.alb.alb_dns_name
 }
 

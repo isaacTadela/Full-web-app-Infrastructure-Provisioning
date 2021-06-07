@@ -38,13 +38,12 @@ This repo creates environment modules with all the necessary resources to enable
 - All resources will use public subnets to allow traffic from outside
 - The instances should allow incoming traffic on port 80 from the LB only
 - The instances should allow SSH access to the admin user
-- Each DB subnet group must have at least two Availability Zones in the Region so we have 2 private subnets for RDS
 - You can specify only one subnet per Availability Zone. You must specify subnets from at least two Availability Zones so we have 2 public subnets for RDS
 
 ### RDS Requirements:
 - Use free-tier instances only (t2.micro)
 - All resources will use private subnets, to allow traffic only from the instances in the VPC
-- Each DB subnet group must have subnets in at least two Availability Zones in an AWS Region (required by AWS)
+- [Required By AWS](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html) ,Each DB subnet group must have at least one subnet in at least two Availability Zones in the AWS Region
 
 
 ## Setup and Adjustments
@@ -67,22 +66,23 @@ Every instance needs a key and the public key here is the file '\modules\ec2\key
 and you can change it according to your generated key so you can ssh to the instances using you private key
 
 #### Script
-All instances runs the script at startup, you can find it in 'modules\ec2\templates\project-app.cloudinit', 
-the script installs chef-solo and awscli, afterwards download my cookbook from my private S3 bucket,
-and finally run my [cookbook](https://github.com/isaacTadela/Chef_ec2) 
+All instances runs the script at startup, you can find it in 'modules\ec2\templates\project-app.cloudinit',  
+the script set system environment variable, installs chef-solo and awscli, afterwards download my cookbooks from my private S3 bucket,
+and finally run my [Cookbooks](https://github.com/isaacTadela/Chef_ec2) 
 
 #### EC2 Role - S3 Access
-I assume that your application residing in an s3 bucket as a tar file 
-So every ec2 instance have a role attached to it with access of AmazonS3ReadOnlyAccess policy that you can also customize to your needs
+I assume that your application residing in an S3 bucket as a tar file  
+So every ec2 instance have a role attached to allow it to access the S3, AmazonS3ReadOnlyAccess policy  
+you can also customize to your needs
 
 
 ## Done
-Do not forget to terminate the instances, time is money
-```terraform destroy```
+Do not forget to terminate the environment, time is money
+Simply run ```terraform destroy```
 
 
 ## Diagram
-Seeing is believing or understanding so for the finally you can see here a 3D diagram of all the environment
+Seeing is believing or understanding in our case so for the finally you can see here a 3D diagram of all the environment
 (generated with [Cloudcraft](https://www.cloudcraft.co))
 
 ![cloudcraft diagram]( /cloudcraft%20diagram(3D).png )
