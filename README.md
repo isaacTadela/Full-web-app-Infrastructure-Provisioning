@@ -12,7 +12,7 @@ This repo creates environment modules with all the necessary resources to enable
 - LaunchConfiguration (and a user-data script included)
 - IAM Roles
 - CloudWatch
-  
+    
 
 ## Prerequisite resources
 - AWS cli configure with suitable privileges
