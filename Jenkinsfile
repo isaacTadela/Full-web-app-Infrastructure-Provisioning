@@ -21,12 +21,7 @@ try {
   // Run terraform plan
   stage('plan') {
     node {
-      withCredentials([[
-        $class: 'AmazonWebServicesCredentialsBinding',
-        credentialsId: credentialsId,
-        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-      ]]) {
+      withAWS(credentials: 'aws-credentials', region: 'eu-west-3') {
         ansiColor('xterm') {
           sh 'terraform plan'
         }
