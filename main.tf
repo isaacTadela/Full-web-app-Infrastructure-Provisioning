@@ -7,7 +7,7 @@ terraform {
     region 								= "eu-west-3"
 	profile 							= "default"
   }
-}
+} 
 
 provider "aws" {
   region = var.region
