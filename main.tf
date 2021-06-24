@@ -1,9 +1,11 @@
 terraform {
    backend "s3" {
     bucket 								= "workshop-tf-state-isaac"
+	encrypt 							= true
     key 								= "workshop-site-state-isaac/terraform.tfstate"
     dynamodb_table 						= "tf-workshop-site-locks"
     region 								= "eu-west-3"
+	profile 							= "defualt"
   }
 }
 
