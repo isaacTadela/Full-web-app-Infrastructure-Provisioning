@@ -30,8 +30,8 @@ module "database" {
   private_subnet 						= module.vpc.private_subnets[0]
   vpc_id 								= module.vpc.vpc_id
   environment 							= var.environment
-  username 								= var.db_username
   password 								= var.db_password
+  username 								= var.db_username
   name 								    = var.db_name
   port 								    = var.db_port
   
