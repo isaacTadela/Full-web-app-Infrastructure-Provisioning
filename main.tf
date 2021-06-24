@@ -63,7 +63,7 @@ module "ec2" {
   autoscaling_group_desired_capacity 	= var.autoscaling_group_desired_capacity
   instance_type 						= var.instance_type
   ami 									= var.ami
-  environment 							= var.environment
+
   
   
   depends_on = [module.alb]
