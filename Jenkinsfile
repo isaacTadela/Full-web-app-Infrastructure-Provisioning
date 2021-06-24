@@ -11,7 +11,7 @@ try {
 
   // Run terraform init
   stage('init') {
-    steps {
+    node {
         ansiColor('xterm') {
           sh 'terraform init'
         }
@@ -20,9 +20,11 @@ try {
 
   // Run terraform plan
   stage('plan') {
-    steps {
-      withAWS(credentials: 'aws-credentials', region: 'eu-west-3') {
+    node {
+	  withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awsCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+        ansiColor('xterm') {
           sh 'terraform plan'
+        }
       }
     }
   }
