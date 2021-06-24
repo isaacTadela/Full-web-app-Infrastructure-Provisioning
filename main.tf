@@ -5,7 +5,6 @@ terraform {
     key 								= "workshop-site-state-isaac/terraform.tfstate"
     dynamodb_table 						= "tf-workshop-site-locks"
     region 								= "eu-west-3"
-	profile 							= "default"
   }
 } 
 
@@ -32,8 +31,8 @@ module "database" {
   environment 							= var.environment
   password 								= var.db_password
   username 								= var.db_username
-  name 								    = var.db_name
   port 								    = var.db_port
+  name 								    = var.db_name
   
   depends_on = [module.vpc]
 }
