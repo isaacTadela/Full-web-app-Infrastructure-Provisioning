@@ -5,7 +5,7 @@ terraform {
     key 								= "workshop-site-state-isaac/terraform.tfstate"
     dynamodb_table 						= "tf-workshop-site-locks"
     region 								= "eu-west-3"
-	profile 							= "defualt"
+	profile 							= "default"
   }
 }
 
