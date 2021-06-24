@@ -11,7 +11,7 @@ try {
 
   // Run terraform init
   stage('init') {
-    steps {
+    node {
         ansiColor('xterm') {
           bat 'terraform init'
         }
