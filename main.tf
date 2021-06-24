@@ -46,3 +46,25 @@ module "alb" {
   
   depends_on = [module.database]
 }
+
+module "ec2" {
+  source = "./modules/ec2"
+  
+  public_subnets 						= module.vpc.public_subnets
+  vpc_id 								= module.vpc.vpc_id
+  db_hostname							= module.database.rds_hostname
+  db_port 								= module.database.rds_port
+  db_username 							= module.database.rds_username
+  db_password 							= module.database.rds_password
+  target_group_arn 						= module.alb.target_group_arn
+  alb_arn_suffix                        = module.alb.alb_arn_suffix
+  autoscaling_group_min_size 			= var.autoscaling_group_min_size
+  autoscaling_group_max_size 			= var.autoscaling_group_max_size
+  autoscaling_group_desired_capacity 	= var.autoscaling_group_desired_capacity
+  instance_type 						= var.instance_type
+  ami 									= var.ami
+  environment 							= var.environment
+  
+  
+  depends_on = [module.alb]
+}
