@@ -28,7 +28,7 @@ try {
       }
     }
   }
-
+/*
   if (env.BRANCH_NAME == 'master') {
 
     // Run terraform apply
@@ -53,6 +53,7 @@ try {
       }
     }
   }
+  */
   currentBuild.result = 'SUCCESS'
 }
 catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException flowError) {
