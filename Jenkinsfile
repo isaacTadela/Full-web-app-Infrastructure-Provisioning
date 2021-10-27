@@ -1,5 +1,5 @@
 // Jenkinsfile
-// String credentialsId = 'JenkinsCred'
+String credentialsId = 'awsCredentials'
 
 try {
   stage('checkout') {
@@ -12,11 +12,9 @@ try {
   // Run terraform init
   stage('init') {
     node {
-      ansiColor('xterm') {
-        withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awsCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-	    sh 'terraform init'
+        ansiColor('xterm') {
+          sh 'terraform init'
         }
-      }
     }
   }
 
@@ -25,12 +23,12 @@ try {
     node {
 	  withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awsCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
         ansiColor('xterm') {
-          sh 'terraform plan' 
+          sh 'terraform plan'
         }
       }
     }
   }
-  
+/*
   if (env.BRANCH_NAME == 'master') {
 
     // Run terraform apply
@@ -57,7 +55,7 @@ try {
   }
   
   currentBuild.result = 'SUCCESS'
-  
+  */
 }
 catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException flowError) {
   currentBuild.result = 'ABORTED'
@@ -69,6 +67,5 @@ catch (err) {
 finally {
   if (currentBuild.result == 'SUCCESS') {
     currentBuild.result = 'SUCCESS'
-    echo 'SUCCESS'
   }
 }
